@@ -6,3 +6,4 @@ Go backend for MTG card recognition.
 
 - Run tests: `go test ./...`
 - Run local: `go run main.go`
+- Pray
