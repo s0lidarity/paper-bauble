@@ -2,12 +2,18 @@ name: API CI
 
 on:
   push:
-    branches: ['**']
+    branches: [main]
     paths:
       - 'apps/api/**'
+      - '.github/workflows/api-ci.yml'
   pull_request:
     paths:
       - 'apps/api/**'
+      - '.github/workflows/api-ci.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -29,11 +35,17 @@ jobs:
         run: go mod download
         working-directory: apps/api
 
+      - name: Run linter
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          working-directory: apps/api
+
       - name: Run tests
-        run: go test -v ./...
+        run: go test -v -race ./...
         working-directory: apps/api
 
-deploy:
+  deploy:
     name: Deploy to Fly
     needs: test
     if: github.ref == 'refs/heads/main' # Only deploy from main
