@@ -1,0 +1,18 @@
+# Binaries
+bin/
+apps/api/api
+*.exe
+*.dll
+*.so
+*.dylib
+
+# OS files
+.DS_Store
+
+# Local Env
+.env
+.env.local
+
+# Go workspace file (Optional - keep if you want it local only)
+# go.work
+# go.work.sum
