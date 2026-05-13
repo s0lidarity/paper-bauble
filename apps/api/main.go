@@ -65,7 +65,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error opening database connection: %s\n", err)
 	}
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Printf("Error closing database connection: %v\n", err)
+		}
+	}()
 
 	if err := db.Ping(); err != nil {
 		log.Fatalf("Could not connect to Neon: %v\n", err)
