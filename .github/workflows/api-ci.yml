@@ -44,6 +44,8 @@ jobs:
       - name: Run tests
         run: go test -v -race ./...
         working-directory: apps/api
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   deploy:
     name: Deploy to Fly

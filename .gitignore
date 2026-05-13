@@ -13,6 +13,7 @@ apps/api/api
 .env
 .env.local
 
+
 # Go workspace file (Optional - keep if you want it local only)
 # go.work
 # go.work.sum
