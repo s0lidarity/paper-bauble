@@ -20,10 +20,10 @@ func TestHealthCheckHandler(t *testing.T) {
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: \ngot %v \nwanted %v", status, http.StatusOK)
+		t.Errorf("handler returned wrong status code, got: \n%v \nwanted:\n %v", status, http.StatusOK)
 	}
 
-	expected := `{"status":"ok"}` + "\n"
+	expected := `{"db":"connected","status":"ok"}` + "\n"
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: \ngot %v \nwanted %v", rr.Body.String(), expected)
 	}
