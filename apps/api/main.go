@@ -88,7 +88,10 @@ func main() {
 		port = "8080"
 	}
 
-	fmt.Printf("Starting server on port %s...\n", port)
-	err = http.ListenAndServe(":"+port, nil)
+	addr := fmt.Sprintf("0.0.0.0:%s", port)
+	fmt.Println("Listening on", addr)
+	fmt.Printf("Starting paper Bauble API on %s...\n", addr)
+
+	err = http.ListenAndServe(addr, nil)
 	log.Fatal(err)
 }
