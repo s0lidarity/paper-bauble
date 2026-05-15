@@ -15,7 +15,8 @@ func TestHealthCheckHandler(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 
-	handler := http.HandlerFunc(HealthCheckHandler)
+	// Initialize the handler with a nil DB for simple routing tests
+	handler := HealthCheckHandler(nil)
 
 	handler.ServeHTTP(rr, req)
 
