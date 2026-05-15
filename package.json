@@ -1,0 +1,12 @@
+{
+    "name": "paper-bauble-root",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "apps/*"
+    ],
+    "scripts": {
+        "mobile": "npm run start --workspace=apps/mobile",
+        "api": "go run ./apps/api/main.go"
+    }
+}
