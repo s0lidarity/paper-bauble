@@ -69,8 +69,12 @@ func HealthCheckHandler(db *sql.DB) http.HandlerFunc {
 		defer cancel()
 
 		dbStatus := "connected"
-		if err := db.PingContext(ctx); err != nil {
-			dbStatus = fmt.Sprintf("disconnected: %v", err)
+		if db == nil {
+			dbStatus = "disconnected: database connection is nil"
+		} else {
+			if err := db.PingContext(ctx); err != nil {
+				dbStatus = fmt.Sprintf("disconnected: %v", err)
+			}
 		}
 
 		w.Header().Set("Content-Type", "application/json")
