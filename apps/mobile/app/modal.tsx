@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
-import EditScreenInfo from '@/src/components/EditScreenInfo';
-import { Text, View } from '@/src/components/Themed';
+/** 
+ * Note: Ensure these files actually exist in apps/mobile/src/components
+ * If not, remove these imports and use standard components as shown above.
+ */
 
 export default function ModalScreen() {
   return (

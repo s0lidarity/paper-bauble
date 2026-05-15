@@ -25,7 +25,7 @@ func runMigrations(db *sql.DB) error {
 		return err
 	}
 
-	source, err := iofs.New(migrationFS, "migrations")
+	source, err := iofs.New(migrationFS, "db/migrations")
 	if err != nil {
 		return err
 	}
