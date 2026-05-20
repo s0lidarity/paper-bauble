@@ -1,4 +1,4 @@
-name: CI
+name: Deploy
 
 on:
   push:
@@ -6,22 +6,11 @@ on:
     paths:
       - 'apps/api/**'
       - 'apps/mobile/**'
-      - '.github/workflows/api-ci.yml'
-      - '.github/workflows/deploy.yml'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'apps/api/**'
-      - 'apps/mobile/**'
-      - '.github/workflows/api-ci.yml'
       - '.github/workflows/deploy.yml'
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: deploy-${{ github.ref }}
   cancel-in-progress: true
-
-permissions:
-  contents: read
 
 jobs:
   test-api:
@@ -39,12 +28,6 @@ jobs:
       - name: Install dependencies
         run: go mod download
         working-directory: apps/api
-
-      - name: Run linter
-        uses: golangci/golangci-lint-action@v9
-        with:
-          version: latest
-          working-directory: apps/api
 
       - name: Run tests
         run: go test -v -race ./...
@@ -68,3 +51,15 @@ jobs:
 
       - name: Run mobile tests
         run: npm run test:mobile
+
+  deploy:
+    name: Deploy to Fly
+    needs: [test-api, test-mobile]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
+        working-directory: apps/api
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
