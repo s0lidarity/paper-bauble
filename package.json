@@ -7,6 +7,7 @@
     ],
     "scripts": {
         "mobile": "npm run start --workspace=apps/mobile",
-        "api": "go run ./apps/api/main.go"
+        "api": "go run ./apps/api/main.go",
+        "test:mobile": "npm test --workspace=apps/mobile"
     }
 }
