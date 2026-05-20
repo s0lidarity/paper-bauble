@@ -2,7 +2,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRef, useState } from 'react';
 import { Button, Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 
-// Define styles using StyleSheet.create for better reliability and explicit control
+// Explicit StyleSheet to bypass NativeWind issues in experimental RN 0.81
 const cameraOverlayStyles = StyleSheet.create({
     overlayContainer: {
         ...StyleSheet.absoluteFillObject, // Covers the entire parent
@@ -63,7 +63,7 @@ export default function CameraCard({ onPictureTaken }: { onPictureTaken: (uri: s
     const cameraRef = useRef<any>(null);
     
     if (!permission){
-        return <View className="flex-1 bg-slate-900"/>;
+        return <View style={{ flex: 1, backgroundColor: '#0f172a' }} />;
     }
 
     if(!permission.granted){
@@ -93,29 +93,30 @@ export default function CameraCard({ onPictureTaken }: { onPictureTaken: (uri: s
     };
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: 'black' }}>
             <CameraView style={StyleSheet.absoluteFill} ref={cameraRef} facing="back" />
-            
-            {/* UI Overlay Container */}
-            <View style={[StyleSheet.absoluteFill, { zIndex: 10, elevation: 10 }]} pointerEvents="box-none">
-                {/* Alignment Frame and Prompt */}
+            <View style={{
+                ...StyleSheet.absoluteFillObject,
+                zIndex: 10,
+                elevation: 10,
+                justifyContent: 'space-between',
+                alignItems: 'center',
+            }} pointerEvents="box-none">
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} pointerEvents="none">
-                    <View className="w-72 h-96 border-2 border-dashed border-yellow-400 rounded-xl bg-black/20" />
-                    <Text className="text-yellow font-bold mt-4 text-center px-10">
-                        Please align your deck within the frame
-                    </Text>
+                    <View style={{ width: 288, height: 384, borderWidth: 2, borderStyle: 'dashed', borderColor: '#fbbf24', borderRadius: 12, backgroundColor: 'rgba(0,0,0,0.2)' }} />
+                    <Text style={{ color: '#ffffff', fontWeight: 'bold', marginTop: 16, textAlign: 'center', paddingHorizontal: 40 }}>Please align your deck within the frame</Text>
                 </View>
-
-                {/* Capture Button - Absolutely positioned to stay above the tab bar */}
                 <View style={{ position: 'absolute', bottom: 60, width: '100%', alignItems: 'center' }} pointerEvents="box-none">
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         onPress={takePicture}
-                        className="w-20 h-20 bg-white rounded-full border-4 border-slate-300 justify-center items-center active:bg-slate-200">
-                        <View className="w-14 h-14 bg-white rounded-full border-slate-400" />
+                        style={{
+                            width: 80, height: 80, backgroundColor: '#ffffff', borderRadius: 40,
+                            borderWidth: 4, borderColor: '#cbd5e1', justifyContent: 'center', alignItems: 'center'
+                        }}>
+                        <View style={{ width: 56, height: 56, backgroundColor: '#ffffff', borderRadius: 28, borderColor: '#94a3b8' }} />
                     </TouchableOpacity>
                 </View>
             </View>
         </View>
     );
-
 };
