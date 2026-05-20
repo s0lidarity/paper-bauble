@@ -1,15 +1,17 @@
-name: API CI
+name: CI
 
 on:
   push:
     branches: [main]
     paths:
       - 'apps/api/**'
+      - 'apps/mobile/**'
       - '.github/workflows/api-ci.yml'
   pull_request:
     branches: [main]
     paths:
       - 'apps/api/**'
+      - 'apps/mobile/**'
       - '.github/workflows/api-ci.yml'
 
 concurrency:
@@ -20,7 +22,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  test-api:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -48,9 +50,26 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
+  test-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run mobile tests
+        run: npm run test:mobile
+
   deploy:
     name: Deploy to Fly
-    needs: test
+    needs: [test-api, test-mobile]
     if: github.ref == 'refs/heads/main' # Only deploy from main
     runs-on: ubuntu-latest
     steps:

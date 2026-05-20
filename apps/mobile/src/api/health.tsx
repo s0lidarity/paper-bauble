@@ -1,6 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import Constants from 'expo-constants';
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
+export interface HealthResponse {
+    status: string;
+    db: string;
+    env?: string;
+}
 
 const getBaseUrl = () => {
     const debuggerHost = Constants.expoConfig?.hostUri;
@@ -13,7 +18,7 @@ const getBaseUrl = () => {
 };
 
 export const useHealthCheck = () => {
-    return useQuery({
+    return useQuery<HealthResponse>({
         queryKey: ['health'],
         queryFn: async () => {
             const baseUrl = getBaseUrl();
@@ -21,7 +26,7 @@ export const useHealthCheck = () => {
             if (!response.ok){
                 throw new Error('Network response was not ok'); 
             }
-            return response.json();
+            return (await response.json()) as HealthResponse;
         }
     });
 };

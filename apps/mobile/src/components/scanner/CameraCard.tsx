@@ -56,6 +56,19 @@ const cameraOverlayStyles = StyleSheet.create({
         borderRadius: 28, // rounded-full
         borderColor: '#94a3b8', // slate-400
     },
+    permissionContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f8fafc', // slate-50
+        padding: 24,
+    },
+    permissionText: {
+        textAlign: 'center',
+        color: '#334155', // slate-700
+        marginBottom: 16,
+        fontWeight: '500',
+    }
 });
 
 export default function CameraCard({ onPictureTaken }: { onPictureTaken: (uri: string) => void }) {
@@ -68,8 +81,8 @@ export default function CameraCard({ onPictureTaken }: { onPictureTaken: (uri: s
 
     if(!permission.granted){
         return(
-            <View className="flex-1 justify-center items-center bg-slate-50 p-6">
-                <Text className="text-center text-slate-700 mb-4 font-medium">
+            <View style={cameraOverlayStyles.permissionContainer}>
+                <Text style={cameraOverlayStyles.permissionText}>
                     We need your permission to use the camera
                 </Text>
                 <Button onPress={requestPermission} title="Grant Camera Permission" />
