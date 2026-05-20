@@ -1,38 +1,59 @@
-import { Text, View, ActivityIndicator } from 'react-native';
+import { Text, View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useHealthCheck } from '../../src/api/health';
 import { Card } from '../../src/components/card';
 
 export default function HomeScreen() {
   const { data, isLoading, error } = useHealthCheck();
   if (isLoading) {
-    return <View className="flex-1 justify-center items-center bg-slate-50">
+    return <View style={styles.container}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>;
   }
   if (error) {
     return (
-      <View className="flex-1 justify-center items-center bg-slate-50">
-        <Text className="text-red-500 font-bold text-center">Error: {error.message}</Text>
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Error: {error.message}</Text>
       </View>
     )
   }
 
   return ( 
-    <View className="flex-1 justify-center items-center bg-slate-50">
-      <Card className="w-4/5">
-        <Text className="text-2xl font-black text-slate-900 mb-2"> 
+    <View style={styles.container}>
+      <Card style={styles.cardWidth}>
+        <Text style={styles.title}> 
           Paper Bauble Status
         </Text>
-        <View className="flex-row items-center">
-          <View className={`h-3 w-3 rounded-full ${data?.status === 'ok' ? 'bg-green-500' : 'bg-yellow-500'}`} />
-          <Text className="text-slate-600 font-medium">
+        <View style={styles.statusRow}>
+          <View style={[styles.statusDot, { backgroundColor: data?.status === 'ok' ? '#22c55e' : '#eab308' }]} />
+          <Text style={styles.statusText}>
             API Status: {data?.status}
           </Text>
           </View>
-        <Text className="text-slate-400 text-sm mt-4 italic text-center">
+        <Text style={styles.dbText}>
           DB Status: {data?.db}
         </Text>
       </Card>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+    container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f8fafc' },
+    cardWidth: { width: '80%' },
+    title: { fontSize: 24, fontWeight: '900', color: '#0f172a', marginBottom: 8 },
+    statusRow: { flexDirection: 'row', alignItems: 'center' },
+    statusDot: { height: 12, width: 12, borderRadius: 6, marginRight: 8 },
+    statusText: { color: '#475569', fontWeight: '500' },
+    dbText: {
+        color: '#94a3b8',
+        fontSize: 14,
+        marginTop: 16,
+        fontStyle: 'italic',
+        textAlign: 'center',
+    },
+    errorText: {
+        color: '#ef4444',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    }
+});

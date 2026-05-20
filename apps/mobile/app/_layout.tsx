@@ -2,7 +2,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { View } from 'react-native';
 
-import "../global.css"
 const queryClient = new QueryClient();
 
 export default function RootLayout() {

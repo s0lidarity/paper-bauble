@@ -73,7 +73,7 @@ const cameraOverlayStyles = StyleSheet.create({
 
 export default function CameraCard({ onPictureTaken }: { onPictureTaken: (uri: string) => void }) {
     const [permission, requestPermission] = useCameraPermissions();
-    const cameraRef = useRef<any>(null);
+    const cameraRef = useRef<CameraView>(null);
     
     if (!permission){
         return <View style={{ flex: 1, backgroundColor: '#0f172a' }} />;
@@ -108,25 +108,14 @@ export default function CameraCard({ onPictureTaken }: { onPictureTaken: (uri: s
     return (
         <View style={{ flex: 1, backgroundColor: 'black' }}>
             <CameraView style={StyleSheet.absoluteFill} ref={cameraRef} facing="back" />
-            <View style={{
-                ...StyleSheet.absoluteFillObject,
-                zIndex: 10,
-                elevation: 10,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-            }} pointerEvents="box-none">
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} pointerEvents="none">
-                    <View style={{ width: 288, height: 384, borderWidth: 2, borderStyle: 'dashed', borderColor: '#fbbf24', borderRadius: 12, backgroundColor: 'rgba(0,0,0,0.2)' }} />
-                    <Text style={{ color: '#ffffff', fontWeight: 'bold', marginTop: 16, textAlign: 'center', paddingHorizontal: 40 }}>Please align your deck within the frame</Text>
+            <View style={cameraOverlayStyles.overlayContainer} pointerEvents="box-none">
+                <View style={cameraOverlayStyles.alignmentFrameContainer} pointerEvents="none">
+                    <View style={cameraOverlayStyles.alignmentFrame} />
+                    <Text style={cameraOverlayStyles.promptText}>Please align your deck within the frame</Text>
                 </View>
-                <View style={{ position: 'absolute', bottom: 60, width: '100%', alignItems: 'center' }} pointerEvents="box-none">
-                    <TouchableOpacity
-                        onPress={takePicture}
-                        style={{
-                            width: 80, height: 80, backgroundColor: '#ffffff', borderRadius: 40,
-                            borderWidth: 4, borderColor: '#cbd5e1', justifyContent: 'center', alignItems: 'center'
-                        }}>
-                        <View style={{ width: 56, height: 56, backgroundColor: '#ffffff', borderRadius: 28, borderColor: '#94a3b8' }} />
+                <View style={cameraOverlayStyles.captureButtonContainer} pointerEvents="box-none">
+                    <TouchableOpacity onPress={takePicture} style={cameraOverlayStyles.captureButtonOuter}>
+                        <View style={cameraOverlayStyles.captureButtonInner} />
                     </TouchableOpacity>
                 </View>
             </View>
