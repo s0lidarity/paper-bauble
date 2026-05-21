@@ -65,7 +65,7 @@ func HealthCheckHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		// Use a timeout for the DB ping to prevent hanging
-		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 		defer cancel()
 
 		dbStatus := "connected"
@@ -82,7 +82,7 @@ func HealthCheckHandler(db *sql.DB) http.HandlerFunc {
 		if err := json.NewEncoder(w).Encode(map[string]string{
 			"status": "ok",
 			"db":     dbStatus,
-			"env":    os.Getenv("FLY_APP_NAME"), // Helps confirm we are in prod
+			"env":    os.Getenv("RENDER_SERVICE_NAME"), // Helps confirm we are on Render
 		}); err != nil {
 			fmt.Printf("Error encoding health check response: %s\n", err)
 		}
