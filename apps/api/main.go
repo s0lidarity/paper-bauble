@@ -65,7 +65,7 @@ func HealthCheckHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		// Use a timeout for the DB ping to prevent hanging
-		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+		ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 		defer cancel()
 
 		dbStatus := "connected"
