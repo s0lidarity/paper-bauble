@@ -12,7 +12,7 @@ const getBaseUrl = () => {
     const localhost = debuggerHost?.split(':')[0];
 
     if(!localhost){
-        return 'https://paper-bauble-api.fly.dev';
+        return 'https://paper-bauble-api.onrender.com';
     }
     return `http://${localhost}:8080`;
 };
