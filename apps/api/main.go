@@ -9,6 +9,7 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
+	db_pkg "github.com/s0lidarity/paper-bauble/api/db"
 	"github.com/s0lidarity/paper-bauble/api/handlers"
 )
 
