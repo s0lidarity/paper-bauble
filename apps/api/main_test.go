@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/s0lidarity/paper-bauble/api/handlers"
 )
 
 func TestHealthCheckHandler(t *testing.T) {
@@ -17,7 +19,7 @@ func TestHealthCheckHandler(t *testing.T) {
 	rr := httptest.NewRecorder()
 
 	// Initialize the handler with a nil DB for simple routing tests
-	handler := HealthCheckHandler(nil)
+	handler := handlers.HealthCheckHandler(nil)
 
 	handler.ServeHTTP(rr, req)
 

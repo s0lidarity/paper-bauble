@@ -43,7 +43,11 @@ func ScanHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid file: "+err.Error(), http.StatusBadRequest)
 		return
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Printf("Warning: error closing uploaded file: %v", err)
+		}
+	}()
 
 	// Ensure the tmp directory exists
 	if err := os.MkdirAll("tmp", 0755); err != nil {
@@ -61,20 +65,28 @@ func ScanHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Clean up the file from disk once the handler finishes
-	defer os.Remove(dst.Name())
+	defer func() {
+		if err := os.Remove(dst.Name()); err != nil {
+			log.Printf("Warning: error removing temp file %s: %v", dst.Name(), err)
+		}
+	}()
 
 	// Copy the uploaded file to the destination file
 	if _, err := io.Copy(dst, file); err != nil {
-		dst.Close()
+		_ = dst.Close()
 		log.Printf("Failed to save image: %v", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
 	// Close the file explicitly before Tesseract tries to read it
-	dst.Close()
+	if err := dst.Close(); err != nil {
+		log.Printf("Failed to close temp file: %v", err)
+	}
 
 	client := gosseract.NewClient()
-	defer client.Close()
+	defer func() {
+		_ = client.Close()
+	}()
 
 	// Point Tesseract to the file we just saved
 	if err := client.SetImage(dst.Name()); err != nil {
@@ -99,5 +111,7 @@ func ScanHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		log.Printf("Failed to encode scan response: %v", err)
+	}
 }

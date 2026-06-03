@@ -47,7 +47,9 @@ func TestScanHandler_WithFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	writer.Close()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
 
 	req := httptest.NewRequest(http.MethodPost, "/scan", body)
 	req.Header.Set("Content-Type", writer.FormDataContentType())
@@ -55,7 +57,8 @@ func TestScanHandler_WithFile(t *testing.T) {
 
 	ScanHandler(rr, req)
 
-	if rr.Code == http.StatusOK {
+	switch rr.Code {
+	case http.StatusOK:
 		var resp ScanResponse
 		if err := json.NewDecoder(rr.Body).Decode(&resp); err != nil {
 			t.Fatalf("Failed to decode response: %v", err)
@@ -63,11 +66,11 @@ func TestScanHandler_WithFile(t *testing.T) {
 		if resp.Status != "success" {
 			t.Errorf("Expected status 'success', got %s", resp.Status)
 		}
-	} else if rr.Code == http.StatusInternalServerError {
+	case http.StatusInternalServerError:
 		// This is acceptable in environments where Tesseract isn't configured,
 		// as long as the handler didn't crash before this point.
 		t.Log("OCR step failed as expected with invalid image data")
-	} else {
+	default:
 		t.Errorf("Unexpected status code: %v. Body: %s", rr.Code, rr.Body.String())
 	}
 

@@ -45,7 +45,7 @@ func HealthCheckHandler(db *sql.DB) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		json.NewEncoder(w).Encode(map[string]interface{}{
+		if err := json.NewEncoder(w).Encode(map[string]interface{}{
 			"status": "ok",
 			"db":     dbStatus,
 			"libs": map[string]string{
@@ -53,6 +53,8 @@ func HealthCheckHandler(db *sql.DB) http.HandlerFunc {
 				"gosseract": "v2",
 			},
 			"env": os.Getenv("RENDER_SERVICE_NAME"),
-		})
+		}); err != nil {
+			log.Printf("Failed to encode health response: %v", err)
+		}
 	}
 }
