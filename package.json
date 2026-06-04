@@ -1,13 +1,16 @@
 {
-    "name": "paper-bauble-root",
-    "version": "1.0.0",
-    "private": true,
-    "workspaces": [
-        "apps/*"
-    ],
-    "scripts": {
-        "mobile": "npm run start --workspace=apps/mobile",
-        "api": "go run ./apps/api/main.go",
-        "test:mobile": "npm test --workspace=apps/mobile"
-    }
+  "name": "paper-bauble-root",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "mobile": "npm run start --workspace=apps/mobile",
+    "api": "go run ./apps/api/main.go",
+    "test:mobile": "npm test --workspace=apps/mobile"
+  },
+  "dependencies": {
+    "expo-image-manipulator": "~14.0.8"
+  }
 }

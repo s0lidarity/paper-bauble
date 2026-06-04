@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Image, Button, Alert } from 'react-native';
+import * as ImageManipulator from 'expo-image-manipulator';
 import CameraCard from '../../src/components/scanner/CameraCard';
 import { uploadCard } from '../../src/api/cards';
 
@@ -13,7 +14,13 @@ export default function ScanScreen(){
                     <Button title="Retake" onPress={() => setImageUri(null)} />
                     <Button title="Upload & Scan" onPress={async () => {
                         try {
-                            const result = await uploadCard(imageUri);
+                            // Compress and resize the image before uploading to ensure it is < 5MB.
+                            // 2000px width is a good balance for Tesseract OCR accuracy and file size.
+                            const manipulatedImage = await ImageManipulator.manipulate(imageUri)
+                                .resize({ width: 2000 })
+                                .saveAsync({ compress: 0.7, format: ImageManipulator.SaveFormat.JPEG });
+
+                            const result = await uploadCard(manipulatedImage.uri);
                             console.log("Upload successful:", result);
                             // You can navigate or update state here
                         } catch (error) {
