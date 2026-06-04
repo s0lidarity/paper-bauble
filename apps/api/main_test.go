@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/s0lidarity/paper-bauble/api/handlers"
 )
 
 func TestHealthCheckHandler(t *testing.T) {
@@ -17,7 +19,7 @@ func TestHealthCheckHandler(t *testing.T) {
 	rr := httptest.NewRecorder()
 
 	// Initialize the handler with a nil DB for simple routing tests
-	handler := HealthCheckHandler(nil)
+	handler := handlers.HealthCheckHandler(nil)
 
 	handler.ServeHTTP(rr, req)
 
@@ -25,7 +27,7 @@ func TestHealthCheckHandler(t *testing.T) {
 		t.Errorf("handler returned wrong status code, got: \n%v \nwanted:\n %v", status, http.StatusOK)
 	}
 
-	var resp map[string]string
+	var resp map[string]interface{}
 	if err := json.NewDecoder(rr.Body).Decode(&resp); err != nil {
 		t.Fatalf("failed to decode response body: %v", err)
 	}
