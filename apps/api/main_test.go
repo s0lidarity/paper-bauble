@@ -27,7 +27,7 @@ func TestHealthCheckHandler(t *testing.T) {
 		t.Errorf("handler returned wrong status code, got: \n%v \nwanted:\n %v", status, http.StatusOK)
 	}
 
-	var resp map[string]string
+	var resp map[string]interface{}
 	if err := json.NewDecoder(rr.Body).Decode(&resp); err != nil {
 		t.Fatalf("failed to decode response body: %v", err)
 	}
